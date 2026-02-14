@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#0f1720">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estructurando Tu Futuro</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+.estadisticas {
+  margin: 20px auto;
+  max-width: 350px;
+  text-align: center;
+  color: white;
+  background: #141b22;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.estadisticas h3 {
+  margin-bottom: 10px;
+}
+
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: url('fondo.png') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+    display: flex;
+    justify-content: center;
+}
+
+.app {
+    width: 390px;
+    min-height: 100vh;
+    background: #1c252e;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+<!-- COMUNIDAD -->
+<div id="comunidad" class="section">
+    <h2>Comunidad</h2>
+
+    <div class="card">
+        <textarea id="mensaje" placeholder="Comparte tu logro..." 
+        style="width:100%; padding:10px; border-radius:10px;"></textarea>
+
+        <button onclick="publicar()">Publicar</button>
+    </div>
+
+    <div id="listaMensajes"></div>
+</div>
+
+.content {
+    padding: 30px 20px;
+}
+
+.section { display: none; }
+.active { display: block; }
+
+h2 {
+    text-align: center;
+    color: #d4af37;
+    margin-bottom: 25px;
+}
+
+.card {
+    background: #141b22;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.big {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #d4af37, #f0d78c);
+    font-weight: 700;
+    margin-top: 10px;
+    cursor: pointer;
+
+}
+
+nav {
+    display: flex;
+    justify-content: space-around;
+    background: #111;
+    padding: 15px 0;
+}
+
+nav button {
+    background: none;
+    color: white;
+    font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<div class="content">
+
+<!-- INICIO -->
+<div id="inicio" class="section active">
+    <h2>Frase del Día</h2>
+
+    <div class="card">
+        <div id="frase" class="big"></div>
+    </div>
+
+    <div class="promo-reto">
+        <h3>Estructurando Tu Futuro</h3>
+        <h2>Reto 100 Días</h2>
+        <div class="flecha">↓</div>
+        <button onclick="mostrar('reto')">Ir al Reto</button>
+    </div>
+</div>
+<div class="estadisticas">
+  <h3>📊 Tu Progreso</h3>
+  <p>Total Ahorrado: $<span id="totalAhorrado">0</span></p>
+  <p>Días Completados: <span id="diasCompletados">0</span>/100</p>
+  <p>Progreso: <span id="porcentaje">0</span>%</p>
+  <p>Faltan: $<span id="faltante">5050</span></p>
+</div>
+
+<!-- RETO -->
+<div id="reto" class="section">
+    <h2>Reto 100 Días</h2>
+
+    <div class="card">
+        Día actual: <span id="dia"></span>
+    </div>
+
+    <div class="card">
+        Ahorra hoy: $<span id="ahorroHoy"></span>
+    </div>
+
+    <div class="card">
+        Total acumulado: $<span id="total"></span>
+    </div>
+
+    <button onclick="completarDia()">Marcar como completado</button>
+</div>
+<button onclick="reiniciarReto()" style="background:#c0392b; margin-top:10px;">
+Reiniciar Reto
+</button>
+
+<!-- CALCULADORA -->
+<div id="calculadora" class="section">
+    <h2>Calculadora</h2>
+
+    <div class="card">
+        <input type="number" id="monto" placeholder="Monto inicial" style="width:100%; padding:8px;">
+        <input type="number" id="interes" placeholder="% interés anual" style="width:100%; padding:8px; margin-top:8px;">
+        <input type="number" id="años" placeholder="Años" style="width:100%; padding:8px; margin-top:8px;">
+        <button onclick="calcular()">Calcular</button>
+    </div>
+
+    <div class="card">
+        Resultado: $<span id="resultado">0</span>
+    </div>
+</div>
+
+</div>
+
+<nav>
+    <button onclick="mostrar('comunidad')">Comunidad</button>   
+    <button onclick="mostrar('inicio')">Inicio</button>
+    <button onclick="mostrar('reto')">Reto</button>
+    <button onclick="mostrar('calculadora')">Calc</button>
+</nav>
+
+</div>
+
+<script>
+// NAVEGACIÓN
+function mostrar(seccion) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(seccion).classList.add('active');
+}
+
+// FRASE DIARIA
+const frases = [
+"El dinero sin dirección se convierte en estrés.",
+"La disciplina hace lo que la motivación no puede.",
+"Cada decisión correcta te aleja del arrepentimiento.",
+"No todo avance es visible, pero todo avance transforma."
+];
+
+function fraseDelDia() {
+    const hoy = new Date().getDate();
+    return frases[hoy % frases.length];
+}
+document.getElementById("frase").innerText = fraseDelDia();
+
+// RETO 100 DÍAS
+let dia = localStorage.getItem("dia") ? parseInt(localStorage.getItem("dia")) : 1;
+let total = localStorage.getItem("total") ? parseInt(localStorage.getItem("total")) : 0;
+
+function actualizar() {
+    document.getElementById("dia").innerText = dia;
+    document.getElementById("ahorroHoy").innerText = dia;
+    document.getElementById("total").innerText = total;
+}
+
+function completarDia() {
+    if (dia <= 100) {
+        total += dia;
+        dia++;
+
+        localStorage.setItem("dia", dia);
+        localStorage.setItem("total", total);
+
+        actualizar();
+        actualizarEstadisticas();
+    } else {
+        alert("🎉 ¡Reto completado!");
+    }
+}
+let mensajes = JSON.parse(localStorage.getItem("mensajes")) || [];
+
+function publicar() {
+    let texto = document.getElementById("mensaje").value.trim();
+
+    if (texto === "") return;
+
+    mensajes.push({
+        texto: texto,
+        fecha: new Date().toLocaleDateString()
+    });
+
+    localStorage.setItem("mensajes", JSON.stringify(mensajes));
+
+    document.getElementById("mensaje").value = "";
+    mostrarMensajes();
+}
+
+function mostrarMensajes() {
+    let contenedor = document.getElementById("listaMensajes");
+    contenedor.innerHTML = "";
+
+    mensajes.slice().reverse().forEach(msg => {
+        contenedor.innerHTML += `
+            <div class="card">
+                <p>${msg.texto}</p>
+                <small>${msg.fecha}</small>
+            </div>
+        `;
+    });
+}
+function reiniciarReto() {
+    if (confirm("¿Seguro que quieres reiniciar el reto?")) {
+        dia = 1;
+        total = 0;
+
+        localStorage.setItem("dia", dia);
+        localStorage.setItem("total", total);
+
+        actualizar();
+        actualizarEstadisticas();
+    }
+}
+
+mostrarMensajes();
+
+actualizar();
+function actualizarEstadisticas() {
+    document.getElementById("totalAhorrado").innerText = total;
+
+    let diasCompletados = dia - 1;
+    document.getElementById("diasCompletados").innerText = diasCompletados;
+
+    let porcentaje = ((total / 5050) * 100).toFixed(1);
+    document.getElementById("porcentaje").innerText = porcentaje;
+
+    document.getElementById("faltante").innerText = 5050 - total;
+}
+
+// CALCULADORA
+function calcular() {
+    let monto = parseFloat(document.getElementById("monto").value);
+    let interes = parseFloat(document.getElementById("interes").value) / 100;
+    let años = parseFloat(document.getElementById("años").value);
+
+    let resultado = monto * Math.pow((1 + interes), años);
+    document.getElementById("resultado").innerText = resultado.toFixed(2);
+}
+
+// SERVICE WORKER
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./service-worker.js")
+    .then(() => console.log("Service Worker registrado"))
+    .catch(err => console.log("Error SW:", err));
+}
+
+actualizar();
+actualizarEstadisticas();
+
+</script>
+
+</body>
+</html>
+
+
