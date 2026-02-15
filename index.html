@@ -47,19 +47,7 @@ body {
     flex-direction: column;
     justify-content: space-between;
 }
-<!-- COMUNIDAD -->
-<div id="comunidad" class="section">
-    <h2>Comunidad</h2>
 
-    <div class="card">
-        <textarea id="mensaje" placeholder="Comparte tu logro..." 
-        style="width:100%; padding:10px; border-radius:10px;"></textarea>
-
-        <button onclick="publicar()">Publicar</button>
-    </div>
-
-    <div id="listaMensajes"></div>
-</div>
 
 .content {
     padding: 30px 20px;
@@ -165,6 +153,20 @@ nav button {
 Reiniciar Reto
 </button>
 
+<!-- COMUNIDAD -->
+<div id="comunidad" class="section">
+    <h2>Comunidad</h2>
+
+    <div class="card">
+        <textarea id="mensaje" placeholder="Comparte tu logro..." 
+        style="width:100%; padding:10px; border-radius:10px;"></textarea>
+
+        <button onclick="publicar()">Publicar</button>
+    </div>
+
+    <div id="listaMensajes"></div>
+</div>
+
 <!-- CALCULADORA -->
 <div id="calculadora" class="section">
     <h2>Calculadora</h2>
@@ -231,9 +233,11 @@ function completarDia() {
         localStorage.setItem("dia", dia);
         localStorage.setItem("total", total);
 
-        actualizar();
-        actualizarEstadisticas();
-    } else {
+    
+    actualizar();
+    actualizarEstadisticas();
+  
+  } else {
         alert("🎉 ¡Reto completado!");
     }
 }
@@ -281,9 +285,6 @@ function reiniciarReto() {
     }
 }
 
-mostrarMensajes();
-
-actualizar();
 function actualizarEstadisticas() {
     document.getElementById("totalAhorrado").innerText = total;
 
@@ -313,12 +314,16 @@ if ("serviceWorker" in navigator) {
     .catch(err => console.log("Error SW:", err));
 }
 
-actualizar();
-actualizarEstadisticas();
+window.onload = function() {
+    actualizar();
+    actualizarEstadisticas();
+    mostrarMensajes();
+};
 
 </script>
 
 </body>
 </html>
+
 
 
